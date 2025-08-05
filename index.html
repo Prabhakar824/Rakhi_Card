@@ -76,7 +76,6 @@
       text-shadow: 1px 1px white;
     }
 
-    /* 🟣 Pulley - violet */
     .pulley {
       position: absolute;
       top: 80px;
@@ -89,7 +88,6 @@
       z-index: 3;
     }
 
-    /* 🧡 Rope */
     .rope-line {
       position: absolute;
       top: 130px;
@@ -100,7 +98,6 @@
       z-index: 1;
     }
 
-    /* ⬇️ Rope handle */
     .rope-handle {
       position: absolute;
       right: 40px;
@@ -114,7 +111,6 @@
       box-shadow: 0 0 5px rgba(0,0,0,0.3);
     }
 
-    /* 🎇 Cracker GIF */
     #localCrackerGif {
       position: fixed;
       top: 0;
@@ -127,31 +123,28 @@
       display: none;
     }
 
-    /* 🎀 Rakhi GIF between hands */
     #rakhiGif {
-  position: absolute;
-  top: 1px;
-  left: 1px;  /* Position near girl's wrist */
-  width: 750px;
-  height: 500px;
-  z-index: 5;
-  display: none;
-}
-
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      width: 750px;
+      height: 500px;
+      z-index: 5;
+      display: none;
+    }
   </style>
 </head>
 <body>
 
-<!-- 🌄 Background Video -->
+<!-- 🎥 Background Video -->
 <video autoplay muted loop id="bg-video">
- <source src="rakhi_vedio.mp4" type="video/mp4">
+  <source src="rakhi_vedio.mp4" type="video/mp4">
 </video>
-</video>
-<audio id="bgMusic" autoplay loop>
-  <source src="rakhi_music.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
-<!-- 💝 Card -->
+
+<!-- 🎵 Background Music -->
+<audio id="bgMusic" src="background_music.mp3" loop></audio>
+
+<!-- 💌 Greeting Card -->
 <div class="card">
   <div class="message" id="messageText">Pull the rope down to tie Rakhi 🎀</div>
   <div class="sliding-area">
@@ -160,8 +153,6 @@
     <div class="pulley"></div>
     <div class="rope-line" id="ropeLine"></div>
     <div class="rope-handle" id="ropeHandle"></div>
-
-    <!-- 🎀 Rakhi GIF -->
     <img id="rakhiGif" src="rakhi_gif.gif" alt="Rakhi Tied" />
   </div>
 </div>
@@ -175,30 +166,51 @@
   const message = document.getElementById('messageText');
   const gif = document.getElementById('localCrackerGif');
   const rakhi = document.getElementById('rakhiGif');
+  const music = document.getElementById('bgMusic');
 
   let isDragging = false;
   let startY = 0;
   let ropeTop = 390;
   let alreadyCelebrated = false;
+
+  // Enable music on first click (required by browsers)
+  document.addEventListener('click', () => {
+    music.play().catch(err => console.log("Autoplay blocked"));
+  }, { once: true });
+
+  // Mouse support
   handle.addEventListener('mousedown', (e) => {
     isDragging = true;
     startY = e.clientY;
-});
-  window.addEventListener('click', () => {
-    const bgMusic = document.getElementById('bgMusic');
-    if (bgMusic.paused) {
-      bgMusic.play().catch(err => console.log('Music play blocked:', err));
-    }
-  }, { once: true });
+  });
+
   document.addEventListener('mouseup', () => {
     isDragging = false;
   });
 
   document.addEventListener('mousemove', (e) => {
     if (!isDragging) return;
+    dragRope(e.clientY);
+  });
 
-    const diffY = (e.clientY - startY);
-    startY = e.clientY
+  // Touch support
+  handle.addEventListener('touchstart', (e) => {
+    isDragging = true;
+    startY = e.touches[0].clientY;
+  });
+
+  document.addEventListener('touchend', () => {
+    isDragging = false;
+  });
+
+  document.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    dragRope(e.touches[0].clientY);
+  });
+
+  function dragRope(currentY) {
+    const diffY = currentY - startY;
+    startY = currentY;
 
     ropeTop += diffY;
     if (ropeTop < 100) ropeTop = 100;
@@ -212,6 +224,7 @@
 
     if (progress >= 1 && !alreadyCelebrated) {
       message.textContent = "❤️Happy Raksha Bandhan Akka❤️";
+      gif.src = "crackers.gif";
       gif.style.display = "block";
       rakhi.style.display = "block";
       alreadyCelebrated = true;
@@ -220,18 +233,8 @@
         gif.style.display = "none";
       }, 6500);
     }
-  });
+  }
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
