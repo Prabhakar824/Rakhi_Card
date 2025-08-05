@@ -147,7 +147,7 @@
  <source src="rakhi_vedio.mp4" type="video/mp4">
 </video>
 </video>
-<audio id="bgMusic" loop>
+<audio id="bgMusic"preload="auto" loop>
   <source src="rakhi_music.mp3" type="audio/mp3">
 </audio>
 
@@ -180,21 +180,20 @@
   let startY = 0;
   let ropeTop = 390;
   let alreadyCelebrated = false;
-
+const bgMusic = document.getElementById('bgMusic');
   handle.addEventListener('mousedown', (e) => {
     isDragging = true;
     startY = e.clientY;
-  });
-  const bgMusic = document.getElementById('bgMusic');
 
-handle.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    startY = e.clientY;
-
-    bgMusic.volume = 0.3;
-    bgMusic.play(); // start music on first click
+    // Start music on first drag
+    if (bgMusic.paused) {
+      bgMusic.volume = 0.3;
+      bgMusic.play().catch((err) => {
+        console.log("Autoplay blocked. User must interact.");
+      });
+    }
 });
-
+  
   document.addEventListener('mouseup', () => {
     isDragging = false;
   });
@@ -230,6 +229,7 @@ handle.addEventListener('mousedown', (e) => {
 
 </body>
 </html>
+
 
 
 
