@@ -147,10 +147,10 @@
  <source src="rakhi_vedio.mp4" type="video/mp4">
 </video>
 </video>
-<audio id="bgMusic"preload="auto" loop>
-  <source src="rakhi_music.mp3" type="audio/mp3">
+<audio id="bgMusic" autoplay loop>
+  <source src="rakhi_song.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
 </audio>
-
 <!-- 💝 Card -->
 <div class="card">
   <div class="message" id="messageText">Pull the rope down to tie Rakhi 🎀</div>
@@ -180,20 +180,16 @@
   let startY = 0;
   let ropeTop = 390;
   let alreadyCelebrated = false;
-const bgMusic = document.getElementById('bgMusic');
   handle.addEventListener('mousedown', (e) => {
     isDragging = true;
     startY = e.clientY;
-
-    // Start music on first drag
-    if (bgMusic.paused) {
-      bgMusic.volume = 0.3;
-      bgMusic.play().catch((err) => {
-        console.log("Autoplay blocked. User must interact.");
-      });
-    }
 });
-  
+  window.addEventListener('click', () => {
+    const bgMusic = document.getElementById('bgMusic');
+    if (bgMusic.paused) {
+      bgMusic.play().catch(err => console.log('Music play blocked:', err));
+    }
+  }, { once: true });
   document.addEventListener('mouseup', () => {
     isDragging = false;
   });
